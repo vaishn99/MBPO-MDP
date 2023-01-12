@@ -132,21 +132,21 @@ class Test_bench:
         for param in self.A1.model.fc1.parameters():
             param.data = torch.nn.parameter.Parameter(init_params)
 
-        print("\nBefore training:")
+        # print("\nBefore training:")
 
-        print(list(self.A1.model.fc1.parameters()))
+        # print(list(self.A1.model.fc1.parameters()))
         
         
         
-        for x in tqdm(range(self.num_of_outerloop)):
+        for x in range(self.num_of_outerloop):
             result.append(self.update_D_real(num_of_epochs=10))
             for i in range(self.num_of_innerloop):
                 self.A1.MBPO_train_1(self.D_real,mul_factor)
                 # A1.MBPO_train_2(D_real)
                 # A1.train_(D_real)
                 # pass
-        print("\nAfter training:")
-        print(list(self.A1.model.fc1.parameters()))
+        # print("\nAfter training:")
+        # print(list(self.A1.model.fc1.parameters()))
         
         return result
     
@@ -160,19 +160,19 @@ class Test_bench:
         for param in self.A1.model.fc1.parameters():
             param.data = torch.nn.parameter.Parameter(init_params)
         
-        print("\nBefore training:")
+        # print("\nBefore training:")
 
-        print(list(self.A1.model.fc1.parameters()))
+        # print(list(self.A1.model.fc1.parameters()))
         
-        for x in tqdm(range(self.num_of_outerloop)):
+        for x in range(self.num_of_outerloop):
             result.append(self.update_D_real(num_of_epochs=10))
             for i in range(self.num_of_innerloop):
                 # self.A1.MBPO_train_1(self.D_real)
                 self.A1.MBPO_train_2(self.D_real,fraction)
                 # self.A1.train_(D_real)
                 # pass
-        print("\nAfter training:")
-        print(list(self.A1.model.fc1.parameters()))
+        # print("\nAfter training:")
+        # print(list(self.A1.model.fc1.parameters()))
         
         return result
     
@@ -186,20 +186,20 @@ class Test_bench:
         for param in self.A1.model.fc1.parameters():
             param.data = torch.nn.parameter.Parameter(init_params)
 
-        print("\nBefore training:")
+        # print("\nBefore training:")
 
-        print(list(self.A1.model.fc1.parameters()))
+        # print(list(self.A1.model.fc1.parameters()))
         
         
-        for x in tqdm(range(self.num_of_outerloop)):
+        for x in range(self.num_of_outerloop):
             result.append(self.update_D_real(num_of_epochs=10))
             for i in range(self.num_of_innerloop):
                 # self.A1.MBPO_train_1(self.D_real)
                 # self.A1.MBPO_train_2(D_real)
                 self.A1.train_(self.D_real)
                 # pass
-        print("\nAfter training:")
-        print(list(self.A1.model.fc1.parameters()))
+        # print("\nAfter training:")
+        # print(list(self.A1.model.fc1.parameters()))
         
         return result
     
@@ -213,5 +213,41 @@ if __name__=='__main__':
     Q_array=solver.compute_q_table(max_iterations=10000, all_close=functools.partial(np.allclose, rtol=1e-10, atol=1e-10)) # Q_value associated with the environment
     
     # play_ground.perform_pure_real()
-    play_ground.perform_pure_fake(mult_factor=1)
+    # play_ground.perform_pure_fake(mult_factor=1)
     # play_ground.perform_mixed_strategy()
+    
+    # my_data = np.genfromtxt("./experiment/init_param_small.csv", delimiter=',')
+    # init_params=torch.from_numpy(my_data)
+    # result=play_ground.perform_pure_real(init_params.float())
+    
+    fract_list=np.arange(0,1.1,.1)
+    prim_policy_list=[]
+    for fract in tqdm(fract_list):
+        fract=np.round(fract,2)
+        my_data = np.genfromtxt("./experiment/init_param_small.csv", delimiter=',')
+        init_params=torch.from_numpy(my_data)
+        result=play_ground.perform_mixed_strategy(fract,init_params.float())
+        prim_policy_list.append(list(play_ground.A1.model.fc1.parameters()))
+    prim_policy_list=np.array(prim_policy_list)
+    np.savetxt("./experiment/exp_rslt_1.csv", prim_policy_list, delimiter=",")
+    
+    
+    fract_list=np.arange(0,1.1,.1)
+    sec_policy_list=[]
+    number_of_times=10
+
+    for fract in tqdm(fract_list):
+        fract=np.round(fract,2)
+        policy_for_fract=[]
+        for i in range(number_of_times):
+            my_data = np.genfromtxt("./experiment/init_param_small.csv", delimiter=',')
+            init_params=torch.from_numpy(my_data)
+            result=play_ground.perform_mixed_strategy(fract,init_params.float())
+            policy_for_fract.append(list(play_ground.A1.model.fc1.parameters()))
+        policy_for_fract=np.array(policy_for_fract)
+        sec_policy_list.append(policy_for_fract)
+    sec_policy_list=np.array(sec_policy_list)
+    np.savetxt("./experiment/exp_rslt_2.csv", sec_policy_list, delimiter=",")
+    
+    true_Q=solver.compute_q_table(max_iterations=10000, all_close=functools.partial(np.allclose, rtol=1e-10, atol=1e-10))
+    np.savetxt("./experiment/true_Q.csv", true_Q, delimiter=",")    

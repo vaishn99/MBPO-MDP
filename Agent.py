@@ -52,7 +52,7 @@ class Agent():
         self.env_model.set_start_state()
         self.D_fake.flush_all()
     def reset(self):
-        init_weights(self.model)
+        # init_weights(self.model)
         self.env_model.reset()
         self.D_fake.flush_all()
 
