@@ -234,7 +234,7 @@ class Agent():
         frc_of_real=self.fraction_of_real
         if fraction_of_real is not None:
             frc_of_real=fraction_of_real
-        
+        self.batch_size=D_real.position
         num_of_real_epi=int(self.batch_size*frc_of_real)
         num_of_fake_epi=self.batch_size-num_of_real_epi
         pos_list=np.random.choice(a=len(self.D_fake.buffer),size=min([num_of_fake_epi,len(self.D_fake.buffer)]))

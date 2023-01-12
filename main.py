@@ -122,62 +122,77 @@ class Test_bench:
         
         return
     
-    def perform_pure_fake(self,mult_factor=1):
+    def perform_pure_fake(self,mul_factor,init_params):
         
         # MBPO based agent 
 
         self.reset_play_ground()
+        result=[]
+        
+        for param in self.A1.model.fc1.parameters():
+            param.data = torch.nn.parameter.Parameter(init_params)
 
         print("\nBefore training:")
 
         print(list(self.A1.model.fc1.parameters()))
         
+        
+        
         for x in tqdm(range(self.num_of_outerloop)):
-            self.update_D_real(num_of_epochs=10)
+            result.append(self.update_D_real(num_of_epochs=10))
             for i in range(self.num_of_innerloop):
-                self.A1.MBPO_train_1(self.D_real,mult_fcator=mult_factor)
+                self.A1.MBPO_train_1(self.D_real,mul_factor)
                 # A1.MBPO_train_2(D_real)
                 # A1.train_(D_real)
                 # pass
         print("\nAfter training:")
         print(list(self.A1.model.fc1.parameters()))
         
-        return
+        return result
     
-    def perform_mixed_strategy(self,fraction_of_real=0.5):
+    def perform_mixed_strategy(self,fraction,init_params):
         
         # MBPO based agent 
 
         self.reset_play_ground()
-
+        result=[]
+        
+        for param in self.A1.model.fc1.parameters():
+            param.data = torch.nn.parameter.Parameter(init_params)
+        
         print("\nBefore training:")
 
         print(list(self.A1.model.fc1.parameters()))
         
         for x in tqdm(range(self.num_of_outerloop)):
-            self.update_D_real(num_of_epochs=10)
+            result.append(self.update_D_real(num_of_epochs=10))
             for i in range(self.num_of_innerloop):
                 # self.A1.MBPO_train_1(self.D_real)
-                self.A1.MBPO_train_2(self.D_real,fraction_of_real=fraction_of_real)
+                self.A1.MBPO_train_2(self.D_real,fraction)
                 # self.A1.train_(D_real)
                 # pass
         print("\nAfter training:")
         print(list(self.A1.model.fc1.parameters()))
         
-        return
+        return result
     
-    def perform_pure_real(self):
+    def perform_pure_real(self,init_params):
         
         # MBPO based agent 
 
         self.reset_play_ground()
+        result=[]
+        
+        for param in self.A1.model.fc1.parameters():
+            param.data = torch.nn.parameter.Parameter(init_params)
 
         print("\nBefore training:")
 
         print(list(self.A1.model.fc1.parameters()))
         
+        
         for x in tqdm(range(self.num_of_outerloop)):
-            self.update_D_real(num_of_epochs=10)
+            result.append(self.update_D_real(num_of_epochs=10))
             for i in range(self.num_of_innerloop):
                 # self.A1.MBPO_train_1(self.D_real)
                 # self.A1.MBPO_train_2(D_real)
@@ -186,8 +201,9 @@ class Test_bench:
         print("\nAfter training:")
         print(list(self.A1.model.fc1.parameters()))
         
-        return
-  
+        return result
+    
+    
 if __name__=='__main__':
     play_ground=Test_bench()    # create an instance of Test_bench
     env = MULTI_ROUND_NDMP.to_env() # initialize the environment
