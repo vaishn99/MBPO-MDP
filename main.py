@@ -205,6 +205,7 @@ class Test_bench:
     
     
 if __name__=='__main__':
+    print("Entered training")
     play_ground=Test_bench()    # create an instance of Test_bench
     env = MULTI_ROUND_NDMP.to_env() # initialize the environment
     play_ground.init_play_ground(env=env)   # initialize Playground,Agent will be initilized within the play_ground
@@ -222,7 +223,7 @@ if __name__=='__main__':
     
     fract_list=np.arange(0,1.1,.1)
     prim_policy_list=[]
-    for fract in tqdm(fract_list):
+    for fract in fract_list:
         fract=np.round(fract,2)
         my_data = np.genfromtxt("./experiment/init_param_small.csv", delimiter=',')
         init_params=torch.from_numpy(my_data)
@@ -236,7 +237,7 @@ if __name__=='__main__':
     sec_policy_list=[]
     number_of_times=10
 
-    for fract in tqdm(fract_list):
+    for fract in fract_list:
         fract=np.round(fract,2)
         policy_for_fract=[]
         for i in range(number_of_times):
@@ -246,8 +247,9 @@ if __name__=='__main__':
             policy_for_fract.append(list(play_ground.A1.model.fc1.parameters()))
         policy_for_fract=np.array(policy_for_fract)
         sec_policy_list.append(policy_for_fract)
+        print("Done with",fract)
     sec_policy_list=np.array(sec_policy_list)
     np.savetxt("./experiment/exp_rslt_2.csv", sec_policy_list, delimiter=",")
     
     true_Q=solver.compute_q_table(max_iterations=10000, all_close=functools.partial(np.allclose, rtol=1e-10, atol=1e-10))
-    np.savetxt("./experiment/true_Q.csv", true_Q, delimiter=",")    
+    np.savetxt("./experiment/true_Q.csv", true_Q, delimiter=",")   

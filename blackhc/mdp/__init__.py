@@ -285,7 +285,6 @@ class MDPEnv(gym.Env):
         # Uniform distribution over state space
         l=[1]*(len(self.mdp.states)-1)
         prob=[x/(len(self.mdp.states)-1) for x in l]
-        # self.start_state = np.random.choice(self.mdp.states[:len(self.mdp.states)-1],p=[1/2,1/2])
         self.start_state = np.random.choice(self.mdp.states[:len(self.mdp.states)-1],p=prob)
 
     def reset(self):
