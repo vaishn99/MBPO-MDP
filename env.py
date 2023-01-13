@@ -36,14 +36,14 @@ def  _multi_round_nmdp_simple():
         A_0=dsl.action()
         A_1=dsl.action()
 
-        start & A_0 > dsl.reward(0) | dsl.reward(0)
-        start & A_0 > start * 1 | S_1
-        start & A_1 > dsl.reward(0) | dsl.reward(5) | dsl.reward(0)
-        start & A_1 > start * 5 | end * 1 | S_1 * 1
+        start & A_0 > dsl.reward(0) | dsl.reward(10)
+        start & A_0 > start * 10 | end
+        start & A_1 > dsl.reward(0) | dsl.reward(0) | dsl.reward(0)
+        start & A_1 > start * 10 | end * 1 | S_1 * 1
         
-        S_1 & A_0 > dsl.reward(0) | dsl.reward(0)
+        S_1 & A_0 > dsl.reward(0) | dsl.reward(10)
         S_1 & A_0 > S_1 * 1 | start
-        S_1 & A_1 > dsl.reward(0) | dsl.reward(5)
+        S_1 & A_1 > dsl.reward(0) | dsl.reward(0)
         S_1 & A_1 > start * 5 | end
         
         dsl.discount(0.5)
@@ -99,6 +99,6 @@ def  _multi_round_nmdp_complex():
 
         return mdp.validate() 
 
-MULTI_ROUND_NDMP = _multi_round_nmdp_complex()
+MULTI_ROUND_NDMP = _multi_round_nmdp_simple()
 
 solver = lp.LinearProgramming(MULTI_ROUND_NDMP)
