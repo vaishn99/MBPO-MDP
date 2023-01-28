@@ -293,6 +293,7 @@ class MDPEnv(gym.Env):
         l=[1]*(len(self.mdp.states)-1)
         prob=[x/(len(self.mdp.states)-1) for x in l]
         self._state = np.random.choice(self.mdp.states[:len(self.mdp.states)-1],p=prob)
+        # self._state=self.mdp.states[0]
         # for x,y in zip(self.transitions.next_states.keys(),self.transitions.next_states.values()):
         #     print(x,y) 
             # print(self.transitions.next_states[self._state, action])
