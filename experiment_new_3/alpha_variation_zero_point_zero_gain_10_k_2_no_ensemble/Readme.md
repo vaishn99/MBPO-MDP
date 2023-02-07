@@ -5,9 +5,9 @@
 
 # Model specs:
 
-### init reward function: "./experiment_new/reward_dict.npy"
-### if ,ensemble : True
-### number of ensembles: 10
+### init reward function: ./experiment_new/reward_dict.npy'
+### if ,ensemble : False
+### number of ensembles: 1
 ### if accumulated: True
 
 # Env specs:
@@ -18,7 +18,7 @@
 
 # Hyper parameters:
 
-### fraction of real: 1
-### gain : 1
-### pred_model horizon len : 4
+### fraction of real: 0
+### gain : 10
+### pred_model horizon len : 2
 ### real horizon len : 40
